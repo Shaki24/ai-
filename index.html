@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>DarkAI · Fast Voice Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0e17;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: #eef2ff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Fast animations - no delay */
+        .app {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: rgba(17, 22, 35, 0.95);
+            backdrop-filter: blur(8px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
+            z-index: 20;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1.2rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-logo i {
+            font-size: 28px;
+            color: #c084fc;
+        }
+        .sidebar-logo span {
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #e2e8f0, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .new-chat-btn {
+            margin: 1rem;
+            background: #1e2438;
+            border: 1px solid #2d3850;
+            padding: 10px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #e2e8f0;
+            transition: 0.1s;
+        }
+        .new-chat-btn:hover {
+            background: #c084fc;
+            color: #0a0e17;
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 0.8rem;
+        }
+        .history-item {
+            padding: 10px 12px;
+            border-radius: 12px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            background: transparent;
+            transition: 0.1s;
+        }
+        .history-item:hover, .history-item.active {
+            background: rgba(192, 132, 252, 0.15);
+            color: white;
+        }
+
+        .db-status {
+            margin-top: auto;
+            padding: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #9ca3af;
+        }
+        .green-dot {
+            width: 6px;
+            height: 6px;
+            background: #10b981;
+            border-radius: 50%;
+        }
+
+        /* Main Chat */
+        .main-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0a0e17;
+        }
+
+        /* Header - only logo here */
+        .chat-header {
+            padding: 0.8rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(10, 14, 23, 0.95);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-logo i {
+            font-size: 28px;
+            color: #c084fc;
+        }
+        .header-logo h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #e2e8f0, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Messages */
+        .messages-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            max-width: 85%;
+        }
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        .message.assistant {
+            align-self: flex-start;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #1e2438;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+        .user .avatar {
+            background: #c084fc;
+        }
+        .assistant .avatar {
+            background: linear-gradient(135deg, #c084fc, #a855f7);
+        }
+        .bubble {
+            padding: 8px 14px;
+            border-radius: 18px;
+            line-height: 1.45;
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+        .user .bubble {
+            background: #1e2438;
+            border-bottom-right-radius: 4px;
+        }
+        .assistant .bubble {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-bottom-left-radius: 4px;
+        }
+
+        /* Action bar */
+        .action-bar {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 16px;
+        }
+        .action-btn:hover {
+            background: #1f2937;
+            color: #c084fc;
+        }
+
+        /* Fast streaming cursor */
+        .streaming-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            background: #c084fc;
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Input area */
+        .input-area {
+            padding: 0.8rem 2rem 1.2rem;
+            background: #0a0e17;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .input-container {
+            background: #111827;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            padding: 4px 4px 4px 18px;
+            border: 1px solid #1f2937;
+            gap: 6px;
+        }
+        .input-container:focus-within {
+            border-color: #c084fc;
+        }
+        .input-container textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            resize: none;
+            padding: 10px 0;
+            max-height: 100px;
+            font-family: inherit;
+        }
+        .input-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .action-input-btn {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 8px 10px;
+            border-radius: 40px;
+            transition: 0.1s;
+        }
+        .action-input-btn:hover {
+            background: #1f2937;
+            color: #c084fc;
+        }
+        .dynamic-btn {
+            background: #c084fc;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            color: #0a0e17;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .dynamic-btn:hover {
+            background: #a855f7;
+        }
+
+        /* Call Modal - Fast */
+        .call-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .call-modal.active {
+            display: flex;
+        }
+        .call-card {
+            background: #111827;
+            border-radius: 28px;
+            padding: 20px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+            border: 1px solid #c084fc;
+        }
+        .call-avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #c084fc, #a855f7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 2rem;
+        }
+        .call-status {
+            font-size: 0.85rem;
+            color: #c084fc;
+            margin: 10px 0;
+        }
+        .call-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .call-btn {
+            background: #1f2937;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .call-btn.end {
+            background: #dc2626;
+        }
+        .call-btn.mic {
+            background: #c084fc;
+            color: #0a0e17;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 30;
+            background: #111827;
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 30px;
+        }
+        @media (max-width: 720px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                height: 100%;
+            }
+            .sidebar.open { left: 0; }
+            .mobile-menu { display: block; }
+            .chat-header { padding-left: 3.5rem; }
+            .messages-wrapper { padding: 0.8rem; }
+            .input-area { padding: 0.6rem 1rem 1rem; }
+        }
+
+        /* Fast scroll */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #c084fc; border-radius: 10px; }
+    </style>
+</head>
+<body>
+<div class="app">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-user-astronaut"></i>
+                <span>DarkAI</span>
+            </div>
+        </div>
+        <button class="new-chat-btn" id="newChatBtn"><i class="fas fa-plus"></i> New Chat</button>
+        <div class="history-list" id="historyList"></div>
+        <div class="db-status">
+            <span class="green-dot"></span> Fast Mode
+            <span style="margin-left: auto;">🌸 Voice Ready</span>
+        </div>
+    </div>
+
+    <!-- Main Chat -->
+    <div class="main-chat">
+        <div class="chat-header">
+            <div class="header-logo">
+                <i class="fas fa-user-astronaut"></i>
+                <h2>DarkAI · Fast Voice</h2>
+            </div>
+        </div>
+
+        <div class="messages-wrapper" id="messagesWrapper">
+            <div style="text-align: center; margin-top: 2rem; opacity: 0.5;">
+                <i class="fas fa-comment-dots" style="font-size: 2rem; color: #c084fc;"></i>
+                <p style="margin-top: 6px;">🌸 Fast AI — Type, Speak, or Call</p>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="input-container">
+                <textarea id="userInput" rows="1" placeholder="Message..."></textarea>
+                <div class="input-actions">
+                    <button class="action-input-btn" id="autoBtn"><i class="fas fa-magic"></i></button>
+                    <button class="action-input-btn" id="speakBtn"><i class="fas fa-microphone"></i></button>
+                    <button class="dynamic-btn" id="dynamicBtn"><i class="fas fa-phone-alt"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call Modal -->
+<div class="call-modal" id="callModal">
+    <div class="call-card">
+        <div class="call-avatar"><i class="fas fa-female"></i></div>
+        <h3>DarkAI Call</h3>
+        <div class="call-status" id="callStatusText">🔴 Tap Talk</div>
+        <div class="call-controls">
+            <button class="call-btn mic" id="callMicBtn"><i class="fas fa-microphone"></i> Talk</button>
+            <button class="call-btn end" id="endCallBtn"><i class="fas fa-phone-slash"></i> End</button>
+        </div>
+    </div>
+</div>
+<button class="mobile-menu" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+
+<script>
+    // ========== FAST CONFIG ==========
+    const CHAT_API_1 = "https://www.gajarbotol.site/Tech_master/api/chatfun.php?question=";
+    const CHAT_API_2 = "https://www.gajarbotol.site/Tech_master/api/custom-ai.php?question=";
+    const VOICE_API = "https://www.gajarbotol.site/Tech_master/api/text-to-voice.php?text=";
+    const IMAGE_API = "https://deepimg-imggen-api-by-tech-master.vercel.app/api/deepimg?prompt=";
+    const NEWS_API = "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=e8d25c24a48349a2b21bc393171de5cf";
+
+    const AI_NAME = "DarkAI";
+    const CREATOR = "Google";
+
+    // ========== STATE ==========
+    let conversations = [];
+    let currentChatId = null;
+    let isProcessing = false;
+    let synth = window.speechSynthesis;
+    let femaleVoice = null;
+
+    // Call state
+    let isCallActive = false;
+    let callRecog = null;
+
+    function genId() { return Date.now() + '-' + Math.random().toString(36).substr(2, 5); }
+    function initConv() {
+        const id = genId();
+        conversations = [{ id: id, name: "Chat", messages: [] }];
+        currentChatId = id;
+    }
+    initConv();
+
+    // DOM
+    const msgsDiv = document.getElementById('messagesWrapper');
+    const userInp = document.getElementById('userInput');
+    const dynBtn = document.getElementById('dynamicBtn');
+    const autoBtn = document.getElementById('autoBtn');
+    const speakBtn = document.getElementById('speakBtn');
+    const newBtn = document.getElementById('newChatBtn');
+    const histDiv = document.getElementById('historyList');
+    const sidebar = document.getElementById('sidebar');
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const callModal = document.getElementById('callModal');
+    const callMicBtn = document.getElementById('callMicBtn');
+    const endCallBtn = document.getElementById('endCallBtn');
+    const callStatusSpan = document.getElementById('callStatusText');
+
+    mobileBtn.onclick = () => sidebar.classList.toggle('open');
+
+    function getChat() { return conversations.find(c => c.id === currentChatId) || conversations[0]; }
+    function save() { localStorage.setItem('darkai_fast', JSON.stringify(conversations)); localStorage.setItem('darkai_fast_id', currentChatId); }
+    function load() {
+        const stored = localStorage.getItem('darkai_fast');
+        if (stored) {
+            try {
+                conversations = JSON.parse(stored);
+                currentChatId = localStorage.getItem('darkai_fast_id') || conversations[0]?.id;
+                if (!currentChatId || !conversations.find(c=>c.id===currentChatId)) currentChatId = conversations[0]?.id;
+            } catch(e) {}
+        }
+        if (!conversations.length) initConv();
+        renderHist();
+        renderMsgs();
+    }
+
+    function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+    function renderHist() {
+        histDiv.innerHTML = '';
+        conversations.forEach(c => {
+            const item = document.createElement('div');
+            item.className = `history-item ${c.id === currentChatId ? 'active' : ''}`;
+            item.innerHTML = `<i class="fas fa-comment"></i> <span>${escapeHtml(c.name)}</span>`;
+            item.onclick = () => { currentChatId = c.id; renderMsgs(); renderHist(); if(window.innerWidth<=720) sidebar.classList.remove('open'); };
+            histDiv.appendChild(item);
+        });
+    }
+
+    // Fast streaming - no lag
+    let streamInterval = null;
+    function streamText(bubbleEl, fullText, onDone) {
+        if (streamInterval) clearInterval(streamInterval);
+        bubbleEl.innerHTML = '';
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < fullText.length) {
+                bubbleEl.innerHTML = fullText.substring(0, i+1) + '<span class="streaming-cursor"></span>';
+                i++;
+                msgsDiv.scrollTop = msgsDiv.scrollHeight;
+            } else {
+                clearInterval(interval);
+                bubbleEl.innerHTML = fullText;
+                if (onDone) onDone();
+                streamInterval = null;
+            }
+        }, 18); // faster streaming
+        streamInterval = interval;
+    }
+
+    function addAssistantMsg(content, extra = {}) {
+        const chat = getChat();
+        const div = document.createElement('div');
+        div.className = 'message assistant';
+        div.innerHTML = `<div class="avatar"><i class="fas fa-female"></i></div><div class="bubble" id="temp-${Date.now()}"><span class="streaming-cursor"></span><div class="action-bar"><button class="action-btn" onclick="copyMsg('${escapeHtml(content).replace(/'/g, "\\'")}')">📋</button><button class="action-btn" onclick="likeMsg()">👍</button><button class="action-btn" onclick="dislikeMsg()">👎</button><button class="action-btn" onclick="speakMsg('${escapeHtml(content).replace(/'/g, "\\'")}')">🔊</button><button class="action-btn" onclick="shareMsg('${escapeHtml(content).replace(/'/g, "\\'")}')">🔗</button></div></div>`;
+        msgsDiv.appendChild(div);
+        const bubble = div.querySelector('.bubble');
+        streamText(bubble, content, () => {
+            const final = { role: 'assistant', content: content, ...extra };
+            chat.messages.push(final);
+            save();
+            renderHist();
+        });
+        msgsDiv.scrollTop = msgsDiv.scrollHeight;
+    }
+
+    function addUserMsg(content) {
+        const chat = getChat();
+        chat.messages.push({ role: 'user', content: content });
+        if (chat.messages.filter(m=>m.role==='user').length === 1) chat.name = content.substring(0,22)+(content.length>22?'…':'');
+        save();
+        renderMsgs();
+    }
+
+    function renderMsgs() {
+        const chat = getChat();
+        msgsDiv.innerHTML = '';
+        if (!chat.messages.length) {
+            msgsDiv.innerHTML = `<div style="text-align:center; margin-top:2rem; opacity:0.5;"><i class="fas fa-comment-dots" style="font-size:2rem; color:#c084fc;"></i><p style="margin-top:6px;">🌸 Fast AI — Type, Speak, or Call</p></div>`;
+            return;
+        }
+        chat.messages.forEach(msg => {
+            const d = document.createElement('div');
+            d.className = `message ${msg.role}`;
+            const av = msg.role === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-female"></i>';
+            let html = msg.role === 'assistant' && typeof marked !== 'undefined' ? marked.parse(msg.content) : msg.content.replace(/\n/g,'<br>');
+            if (msg.imageUrl) html += `<br><img src="${msg.imageUrl}" onclick="openLightbox('${msg.imageUrl}')" style="max-width:100%; border-radius:12px; margin-top:5px;">`;
+            if (msg.newsHtml) html += `<div>${msg.newsHtml}</div>`;
+            if (msg.voiceUrl) html += `<div><audio controls src="${msg.voiceUrl}"></audio></div>`;
+            d.innerHTML = `<div class="avatar">${av}</div><div class="bubble">${html}${msg.role === 'assistant' ? `<div class="action-bar"><button class="action-btn" onclick="copyMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">📋</button><button class="action-btn" onclick="likeMsg()">👍</button><button class="action-btn" onclick="dislikeMsg()">👎</button><button class="action-btn" onclick="speakMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">🔊</button><button class="action-btn" onclick="shareMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">🔗</button></div>` : ''}</div>`;
+            msgsDiv.appendChild(d);
+        });
+        msgsDiv.scrollTop = msgsDiv.scrollHeight;
+    }
+
+    // Identity
+    function checkId(text) {
+        const l = text.toLowerCase();
+        if (l.includes("তোমার নাম") || l.includes("what is your name") || l.includes("who are you")) return AI_NAME;
+        if (l.includes("কে বানিয়েছে") || l.includes("who created you") || l.includes("তোমাকে কে বানিয়েছে")) return CREATOR;
+        return null;
+    }
+
+    async function apiChat(q) {
+        try {
+            const r = await fetch(CHAT_API_1 + encodeURIComponent(q));
+            const d = await r.json();
+            if (d.success && d.reply) return d.reply;
+            throw new Error();
+        } catch {
+            try {
+                const r2 = await fetch(CHAT_API_2 + encodeURIComponent(q));
+                const d2 = await r2.json();
+                if (d2.success && d2.reply) return d2.reply;
+                return "Hello, I'm DarkAI. How can I help? 🌸";
+            } catch {
+                return "I'm here! Please say that again? 🎀";
+            }
+        }
+    }
+
+    async function processMsg(text, fromCall = false) {
+        if (isProcessing) return;
+        isProcessing = true;
+        if (!fromCall) addUserMsg(text);
+        
+        const idRep = checkId(text);
+        if (idRep) {
+            const rep = idRep === "Google" ? "Google created me! I'm DarkAI, made by Google. 💙" : idRep;
+            addAssistantMsg(rep);
+            isProcessing = false;
+            return rep;
+        }
+
+        const low = text.toLowerCase();
+        if (low.includes("image") || low.includes("img")) {
+            let clean = text.replace(/image|img/gi,'').trim();
+            if (!clean) clean = "beautiful landscape";
+            const imgUrl = IMAGE_API + encodeURIComponent(clean) + "&size=3:2";
+            addAssistantMsg(`🌸 Image: "${clean}"`, { imageUrl: imgUrl });
+            isProcessing = false;
+            return "Image generated";
+        }
+        if (low.includes("news")) {
+            try {
+                const res = await fetch(NEWS_API);
+                const data = await res.json();
+                if (data.articles) {
+                    let nh = `<div><strong>📰 News</strong></div>`;
+                    data.articles.slice(0,2).forEach(a => {
+                        nh += `<div style="background:#1e293b; border-radius:10px; padding:6px; margin:5px 0;"><b>${a.title}</b><br><a href="${a.url}" target="_blank" style="color:#c084fc;">Read</a></div>`;
+                    });
+                    addAssistantMsg("Latest news:", { newsHtml: nh });
+                    isProcessing = false;
+                    return "News delivered";
+                }
+            } catch(e) {}
+            addAssistantMsg("News unavailable.");
+            isProcessing = false;
+            return "News error";
+        }
+
+        const reply = await apiChat(text);
+        addAssistantMsg(reply);
+        isProcessing = false;
+        return reply;
+    }
+
+    // Female voice setup
+    function getFemale() {
+        return new Promise(resolve => {
+            if (femaleVoice) resolve(femaleVoice);
+            const voices = synth.getVoices();
+            const fv = voices.find(v => v.name.includes("Google UK English Female") || v.name.includes("Samantha") || v.name.includes("Microsoft Zira") || (v.lang.includes("en") && v.name.includes("Female")));
+            femaleVoice = fv || voices[0];
+            resolve(femaleVoice);
+        });
+    }
+    if (synth) synth.onvoiceschanged = () => getFemale();
+    getFemale();
+
+    function speakFast(text, onEnd) {
+        if (!synth) return;
+        const utter = new SpeechSynthesisUtterance(text);
+        if (femaleVoice) utter.voice = femaleVoice;
+        utter.rate = 0.95;
+        utter.pitch = 1.2;
+        utter.onend = onEnd;
+        synth.speak(utter);
+    }
+
+    // Call system
+    function startCall() {
+        if (isCallActive) return;
+        isCallActive = true;
+        callModal.classList.add('active');
+        callStatusSpan.innerText = "🔴 Tap Talk to speak";
+    }
+
+    function startCallListening() {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Speech not supported");
+            return;
+        }
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        callRecog = new SR();
+        callRecog.continuous = false;
+        callRecog.interimResults = false;
+        callRecog.lang = 'en-US';
+        callRecog.onstart = () => {
+            callStatusSpan.innerText = "🔴 Listening...";
+            callMicBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Stop';
+        };
+        callRecog.onend = () => {
+            callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
+        };
+        callRecog.onresult = async (e) => {
+            const txt = e.results[0][0].transcript;
+            if (!txt) return;
+            callRecog.stop();
+            callStatusSpan.innerText = "🤔 Thinking...";
+            addUserMsg(txt);
+            let rep = await processMsg(txt, true);
+            if (!rep) rep = "Sorry? Please repeat 🎀";
+            callStatusSpan.innerText = "🔊 Speaking...";
+            speakFast(rep, () => {
+                if (isCallActive) callStatusSpan.innerText = "🔴 Tap Talk again";
+            });
+        };
+        callRecog.start();
+    }
+
+    function stopCallListening() {
+        if (callRecog) { callRecog.stop(); callRecog = null; }
+        callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
+    }
+
+    function endCall() {
+        isCallActive = false;
+        if (callRecog) callRecog.stop();
+        synth.cancel();
+        callModal.classList.remove('active');
+        callRecog = null;
+    }
+
+    callMicBtn.onclick = () => {
+        if (!isCallActive) return;
+        if (callRecog && callRecog.start && callRecog.stop) {
+            stopCallListening();
+            callStatusSpan.innerText = "🔴 Tap Talk";
+        } else {
+            startCallListening();
+        }
+    };
+    endCallBtn.onclick = endCall;
+
+    // UI dynamics
+    function updateBtn() {
+        if (userInp.value.trim().length > 0) {
+            dynBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+            dynBtn.onclick = sendMsg;
+        } else {
+            dynBtn.innerHTML = '<i class="fas fa-phone-alt"></i>';
+            dynBtn.onclick = startCall;
+        }
+    }
+
+    async function sendMsg() {
+        const txt = userInp.value.trim();
+        if (!txt || isProcessing) return;
+        userInp.value = '';
+        userInp.style.height = 'auto';
+        updateBtn();
+        await processMsg(txt, false);
+    }
+
+    userInp.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        updateBtn();
+    });
+    userInp.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (userInp.value.trim()) sendMsg();
+        }
+    });
+
+    autoBtn.onclick = () => alert("Auto: image, news, voice commands work");
+
+    // Voice typing
+    let voiceRecog = null;
+    function startVoiceType() {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Speech not supported");
+            return;
+        }
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        voiceRecog = new SR();
+        voiceRecog.continuous = false;
+        voiceRecog.interimResults = false;
+        voiceRecog.lang = 'en-US';
+        voiceRecog.onstart = () => { speakBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>'; };
+        voiceRecog.onend = () => { speakBtn.innerHTML = '<i class="fas fa-microphone"></i>'; voiceRecog = null; };
+        voiceRecog.onresult = async (e) => {
+            const txt = e.results[0][0].transcript;
+            if (txt) {
+                userInp.value = txt;
+                updateBtn();
+                await processMsg(txt, false);
+                userInp.value = '';
+                updateBtn();
+            }
+        };
+        voiceRecog.start();
+    }
+    speakBtn.onclick = startVoiceType;
+
+    newBtn.onclick = () => {
+        const id = genId();
+        conversations.push({ id: id, name: "Chat", messages: [] });
+        currentChatId = id;
+        save();
+        renderMsgs();
+        renderHist();
+    };
+
+    // Globals
+    window.copyMsg = (t) => { navigator.clipboard.writeText(t); alert("Copied!"); };
+    window.likeMsg = () => alert("💖 Thanks!");
+    window.dislikeMsg = () => alert("🌸 Noted");
+    window.speakMsg = (t) => speakFast(t, null);
+    window.shareMsg = (t) => { if(navigator.share) navigator.share({title:'DarkAI', text:t}); else alert("Share: "+t); };
+    window.openLightbox = (src) => {
+        const d = document.createElement('div');
+        d.style.position = 'fixed'; d.style.inset = 0; d.style.background = 'rgba(0,0,0,0.9)'; d.style.display = 'flex';
+        d.style.alignItems = 'center'; d.style.justifyContent = 'center'; d.style.zIndex = 2000;
+        d.innerHTML = `<img src="${src}" style="max-width:90%; max-height:90%; border-radius:16px;"><span style="position:absolute;top:20px;right:30px;font-size:32px;cursor:pointer;" onclick="this.parentElement.remove()">&times;</span>`;
+        document.body.appendChild(d);
+    };
+
+    updateBtn();
+    load();
+</script>
+</body>
+</html>
