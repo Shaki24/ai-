@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>DarkAI · Fixed Voice Assistant</title>
+    <title>DarkAI · Complete Voice Assistant</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -16,7 +16,7 @@
 
         body {
             background: #0a0e17;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             color: #eef2ff;
             height: 100vh;
             overflow: hidden;
@@ -29,7 +29,6 @@
             height: 100vh;
             width: 100%;
             overflow: hidden;
-            position: relative;
         }
 
         /* Sidebar */
@@ -52,10 +51,7 @@
                 height: 100%;
                 transform: translateX(-100%);
             }
-            .sidebar.open {
-                transform: translateX(0);
-                box-shadow: 2px 0 20px rgba(0,0,0,0.5);
-            }
+            .sidebar.open { transform: translateX(0); box-shadow: 2px 0 20px rgba(0,0,0,0.5); }
         }
 
         .sidebar-header {
@@ -68,10 +64,7 @@
             align-items: center;
             gap: 10px;
         }
-        .sidebar-logo i {
-            font-size: 28px;
-            color: #c084fc;
-        }
+        .sidebar-logo i { font-size: 28px; color: #c084fc; }
         .sidebar-logo span {
             font-size: 1.2rem;
             font-weight: 600;
@@ -96,10 +89,7 @@
             color: #e2e8f0;
             transition: 0.1s;
         }
-        .new-chat-btn:hover {
-            background: #c084fc;
-            color: #0a0e17;
-        }
+        .new-chat-btn:hover { background: #c084fc; color: #0a0e17; }
 
         .history-list {
             flex: 1;
@@ -116,7 +106,6 @@
             align-items: center;
             gap: 10px;
             font-size: 0.85rem;
-            background: transparent;
         }
         .history-item:hover, .history-item.active {
             background: rgba(192, 132, 252, 0.15);
@@ -133,12 +122,7 @@
             gap: 6px;
             color: #9ca3af;
         }
-        .green-dot {
-            width: 6px;
-            height: 6px;
-            background: #10b981;
-            border-radius: 50%;
-        }
+        .green-dot { width: 6px; height: 6px; background: #10b981; border-radius: 50%; }
 
         /* Main Chat */
         .main-chat {
@@ -173,20 +157,13 @@
             justify-content: center;
             border-radius: 50%;
         }
-        @media (max-width: 768px) {
-            .menu-btn {
-                display: flex;
-            }
-        }
+        @media (max-width: 768px) { .menu-btn { display: flex; } }
         .header-logo {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        .header-logo i {
-            font-size: 26px;
-            color: #c084fc;
-        }
+        .header-logo i { font-size: 26px; color: #c084fc; }
         .header-logo h2 {
             font-size: 1rem;
             font-weight: 600;
@@ -212,16 +189,9 @@
             gap: 8px;
             max-width: 90%;
         }
-        @media (min-width: 768px) {
-            .message { max-width: 80%; }
-        }
-        .message.user {
-            align-self: flex-end;
-            flex-direction: row-reverse;
-        }
-        .message.assistant {
-            align-self: flex-start;
-        }
+        @media (min-width: 768px) { .message { max-width: 80%; } }
+        .message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .message.assistant { align-self: flex-start; }
         .avatar {
             width: 32px;
             height: 32px;
@@ -268,10 +238,7 @@
             padding: 2px 6px;
             border-radius: 16px;
         }
-        .action-btn:hover {
-            background: #1f2937;
-            color: #c084fc;
-        }
+        .action-btn:hover { background: #1f2937; color: #c084fc; }
 
         .streaming-cursor {
             display: inline-block;
@@ -281,10 +248,7 @@
             margin-left: 2px;
             animation: blink 0.8s infinite;
         }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 
         /* Input */
         .input-area {
@@ -302,9 +266,7 @@
             border: 1px solid #1f2937;
             gap: 6px;
         }
-        .input-container:focus-within {
-            border-color: #c084fc;
-        }
+        .input-container:focus-within { border-color: #c084fc; }
         .input-container textarea {
             flex: 1;
             background: transparent;
@@ -336,11 +298,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: 0.1s;
         }
-        .action-input-btn:hover {
-            background: #1f2937;
-            color: #c084fc;
-        }
+        .action-input-btn:hover { background: #1f2937; color: #c084fc; }
         .dynamic-btn {
             background: #c084fc;
             border: none;
@@ -354,9 +314,6 @@
             justify-content: center;
             font-size: 1.1rem;
             flex-shrink: 0;
-        }
-        .dynamic-btn:hover {
-            background: #a855f7;
         }
 
         /* Call Modal */
@@ -374,9 +331,7 @@
             justify-content: center;
             padding: 1rem;
         }
-        .call-modal.active {
-            display: flex;
-        }
+        .call-modal.active { display: flex; }
         .call-card {
             background: #111827;
             border-radius: 28px;
@@ -407,7 +362,6 @@
             justify-content: center;
             gap: 15px;
             margin-top: 15px;
-            flex-wrap: wrap;
         }
         .call-btn {
             background: #1f2937;
@@ -418,27 +372,11 @@
             cursor: pointer;
             font-weight: 500;
         }
-        .call-btn.end {
-            background: #dc2626;
-        }
-        .call-btn.mic {
-            background: #c084fc;
-            color: #0a0e17;
-        }
+        .call-btn.end { background: #dc2626; }
+        .call-btn.mic { background: #c084fc; color: #0a0e17; }
 
-        .bubble img {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: 12px;
-            margin-top: 5px;
-            cursor: pointer;
-        }
-        .news-card {
-            background: #1e293b;
-            border-radius: 10px;
-            padding: 8px;
-            margin: 5px 0;
-        }
+        .bubble img { max-width: 100%; max-height: 200px; border-radius: 12px; margin-top: 5px; cursor: pointer; }
+        .news-card { background: #1e293b; border-radius: 10px; padding: 8px; margin: 5px 0; }
 
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: #111827; }
@@ -458,7 +396,7 @@
         <div class="history-list" id="historyList"></div>
         <div class="db-status">
             <span class="green-dot"></span> Live
-            <span style="margin-left: auto;">🌸 Fixed</span>
+            <span style="margin-left: auto;">🎤 Voice Ready</span>
         </div>
     </div>
 
@@ -474,16 +412,16 @@
         <div class="messages-wrapper" id="messagesWrapper">
             <div style="text-align: center; margin-top: 2rem; opacity: 0.5;">
                 <i class="fas fa-comment-dots" style="font-size: 2rem; color: #c084fc;"></i>
-                <p style="margin-top: 6px;">🌸 Type, Speak, or Call — All working now</p>
+                <p style="margin-top: 6px;">🎤 Click Speak button and talk — I'll type your words<br>📞 Click Phone button to have a conversation with me</p>
             </div>
         </div>
 
         <div class="input-area">
             <div class="input-container">
-                <textarea id="userInput" rows="1" placeholder="Type your message..."></textarea>
+                <textarea id="userInput" rows="1" placeholder="Type or Speak..."></textarea>
                 <div class="input-actions">
-                    <button class="action-input-btn" id="autoBtn"><i class="fas fa-magic"></i></button>
-                    <button class="action-input-btn" id="speakBtn"><i class="fas fa-microphone"></i></button>
+                    <button class="action-input-btn" id="autoBtn" title="Auto detect"><i class="fas fa-magic"></i></button>
+                    <button class="action-input-btn" id="speakBtn" title="Click and Speak"><i class="fas fa-microphone"></i></button>
                     <button class="dynamic-btn" id="dynamicBtn"><i class="fas fa-phone-alt"></i></button>
                 </div>
             </div>
@@ -495,7 +433,7 @@
     <div class="call-card">
         <div class="call-avatar"><i class="fas fa-female"></i></div>
         <h3>DarkAI Call</h3>
-        <div class="call-status" id="callStatusText">🔴 Tap Talk</div>
+        <div class="call-status" id="callStatusText">🔴 Tap Talk to speak</div>
         <div class="call-controls">
             <button class="call-btn mic" id="callMicBtn"><i class="fas fa-microphone"></i> Talk</button>
             <button class="call-btn end" id="endCallBtn"><i class="fas fa-phone-slash"></i> End</button>
@@ -505,10 +443,10 @@
 
 <script>
     (function() {
-        // ========== CONFIG ==========
+        // ========== API CONFIG ==========
         const CHAT_API_1 = "https://www.gajarbotol.site/Tech_master/api/chatfun.php?question=";
         const CHAT_API_2 = "https://www.gajarbotol.site/Tech_master/api/custom-ai.php?question=";
-        const VOICE_URL = "https://www.gajarbotol.site/Tech_master/api/text-to-voice.php?text=";
+        const VOICE_API = "https://www.gajarbotol.site/Tech_master/api/text-to-voice.php?text=";
         const IMAGE_API = "https://deepimg-imggen-api-by-tech-master.vercel.app/api/deepimg?prompt=";
         const NEWS_API = "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=e8d25c24a48349a2b21bc393171de5cf";
 
@@ -527,11 +465,11 @@
         let isCallActive = false;
         let callRecognition = null;
         let isCallListening = false;
-
+        
         // Voice typing state
-        let voiceRecognition = null;
+        let isVoiceTyping = false;
 
-        // Helper functions
+        // Helper
         function genId() { return Date.now() + '-' + Math.random().toString(36).substr(2, 5); }
         
         function initConv() {
@@ -569,16 +507,16 @@
         function getChat() { return conversations.find(c => c.id === currentChatId) || conversations[0]; }
         
         function save() { 
-            localStorage.setItem('darkai_fixed', JSON.stringify(conversations)); 
-            localStorage.setItem('darkai_fixed_id', currentChatId); 
+            localStorage.setItem('darkai_voice_fixed', JSON.stringify(conversations)); 
+            localStorage.setItem('darkai_voice_fixed_id', currentChatId); 
         }
         
         function load() {
-            const stored = localStorage.getItem('darkai_fixed');
+            const stored = localStorage.getItem('darkai_voice_fixed');
             if (stored) {
                 try {
                     conversations = JSON.parse(stored);
-                    currentChatId = localStorage.getItem('darkai_fixed_id') || conversations[0]?.id;
+                    currentChatId = localStorage.getItem('darkai_voice_fixed_id') || conversations[0]?.id;
                     if (!currentChatId || !conversations.find(c=>c.id===currentChatId)) currentChatId = conversations[0]?.id;
                 } catch(e) {}
             }
@@ -655,7 +593,7 @@
             const chat = getChat();
             msgsDiv.innerHTML = '';
             if (!chat.messages.length) {
-                msgsDiv.innerHTML = `<div style="text-align:center; margin-top:2rem; opacity:0.5;"><i class="fas fa-comment-dots" style="font-size:2rem; color:#c084fc;"></i><p style="margin-top:6px;">🌸 Type, Speak, or Call — All working now</p></div>`;
+                msgsDiv.innerHTML = `<div style="text-align:center; margin-top:2rem; opacity:0.5;"><i class="fas fa-comment-dots" style="font-size:2rem; color:#c084fc;"></i><p style="margin-top:6px;">🎤 Click Speak button and talk — I'll type your words<br>📞 Click Phone button to have a conversation</p></div>`;
                 return;
             }
             chat.messages.forEach(msg => {
@@ -663,7 +601,7 @@
                 d.className = `message ${msg.role}`;
                 const av = msg.role === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-female"></i>';
                 let html = msg.role === 'assistant' && typeof marked !== 'undefined' ? marked.parse(msg.content) : msg.content.replace(/\n/g,'<br>');
-                if (msg.imageUrl) html += `<br><img src="${msg.imageUrl}" onclick="window.openLightbox('${msg.imageUrl}')" style="max-width:100%; border-radius:12px; margin-top:5px;">`;
+                if (msg.imageUrl) html += `<br><img src="${msg.imageUrl}" onclick="window.openLightbox('${msg.imageUrl}')">`;
                 if (msg.newsHtml) html += `<div>${msg.newsHtml}</div>`;
                 if (msg.voiceUrl) html += `<div><audio controls src="${msg.voiceUrl}"></audio></div>`;
                 d.innerHTML = `<div class="avatar">${av}</div><div class="bubble">${html}${msg.role === 'assistant' ? `<div class="action-bar"><button class="action-btn" onclick="window.copyMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">📋</button><button class="action-btn" onclick="window.likeMsg()">👍</button><button class="action-btn" onclick="window.dislikeMsg()">👎</button><button class="action-btn" onclick="window.speakMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">🔊</button><button class="action-btn" onclick="window.shareMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">🔗</button></div>` : ''}</div>`;
@@ -672,7 +610,7 @@
             msgsDiv.scrollTop = msgsDiv.scrollHeight;
         }
 
-        // Identity check
+        // Identity
         function checkIdentity(text) {
             const lower = text.toLowerCase();
             if (lower.includes("তোমার নাম") || lower.includes("what is your name") || lower.includes("who are you")) return AI_NAME;
@@ -680,7 +618,6 @@
             return null;
         }
 
-        // API Chat
         async function callChatAPI(question) {
             try {
                 const res = await fetch(CHAT_API_1 + encodeURIComponent(question));
@@ -699,7 +636,6 @@
             }
         }
 
-        // Process message
         async function processMessage(text, fromCall = false) {
             if (isProcessing) return;
             isProcessing = true;
@@ -732,12 +668,12 @@
                         data.articles.slice(0,2).forEach(a => {
                             nh += `<div class="news-card"><b>${a.title}</b><br><small>${a.description || ''}</small><br><a href="${a.url}" target="_blank" style="color:#c084fc;">Read →</a></div>`;
                         });
-                        addAssistantMessage("Latest news updates:", { newsHtml: nh });
+                        addAssistantMessage("Latest news:", { newsHtml: nh });
                         isProcessing = false;
                         return "News delivered";
                     }
                 } catch(e) {}
-                addAssistantMessage("News unavailable at the moment.");
+                addAssistantMessage("News unavailable.");
                 isProcessing = false;
                 return "News error";
             }
@@ -748,7 +684,7 @@
             return reply;
         }
 
-        // Female Voice Setup
+        // ========== FEMALE VOICE FOR TTS ==========
         function getFemaleVoice() {
             return new Promise(resolve => {
                 if (femaleVoice) resolve(femaleVoice);
@@ -774,24 +710,91 @@
             synth.speak(utterance);
         }
 
-        // ========== CALL SYSTEM (FIXED) ==========
+        // ========== VOICE TYPING (SPEAK BUTTON) - FULLY FIXED ==========
+        let voiceRecognition = null;
+        
+        function startVoiceTyping() {
+            // Check if already listening
+            if (isVoiceTyping) {
+                // Stop if already running
+                if (voiceRecognition) {
+                    try { voiceRecognition.stop(); } catch(e) {}
+                    voiceRecognition = null;
+                }
+                isVoiceTyping = false;
+                speakBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                speakBtn.style.color = '#9ca3af';
+                return;
+            }
+            
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.");
+                return;
+            }
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            voiceRecognition = new SpeechRecognition();
+            voiceRecognition.continuous = false;
+            voiceRecognition.interimResults = false;
+            voiceRecognition.lang = 'en-US';
+            
+            voiceRecognition.onstart = () => {
+                isVoiceTyping = true;
+                speakBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                speakBtn.style.color = '#c084fc';
+            };
+            
+            voiceRecognition.onend = () => {
+                isVoiceTyping = false;
+                speakBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                speakBtn.style.color = '#9ca3af';
+                voiceRecognition = null;
+            };
+            
+            voiceRecognition.onerror = (event) => {
+                console.warn("Speech recognition error:", event.error);
+                isVoiceTyping = false;
+                speakBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                speakBtn.style.color = '#9ca3af';
+                voiceRecognition = null;
+                
+                if (event.error === 'not-allowed') {
+                    alert("Please allow microphone access to use voice typing.");
+                } else if (event.error !== 'no-speech') {
+                    alert("Voice recognition error. Please try again.");
+                }
+            };
+            
+            voiceRecognition.onresult = async (event) => {
+                const transcript = event.results[0][0].transcript;
+                if (transcript && transcript.trim()) {
+                    userInp.value = transcript;
+                    updateDynamicButton();
+                    await processMessage(transcript, false);
+                    userInp.value = '';
+                    updateDynamicButton();
+                }
+            };
+            
+            voiceRecognition.start();
+        }
+
+        // ========== CALL SYSTEM (CONVERSATION MODE) ==========
         function startCall() {
             if (isCallActive) return;
             isCallActive = true;
             callModal.classList.add('active');
             callStatusSpan.innerText = "🔴 Tap Talk to speak";
-            // Reset call button state
             callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
             isCallListening = false;
         }
 
         function startCallListening() {
             if (!('webkitSpeechRecognition' in window)) {
-                alert("Speech recognition not supported in this browser.");
+                alert("Speech recognition not supported.");
                 return;
             }
             
-            // Stop any existing recognition first
             if (callRecognition) {
                 try { callRecognition.stop(); } catch(e) {}
                 callRecognition = null;
@@ -812,32 +815,33 @@
             callRecognition.onend = () => {
                 isCallListening = false;
                 callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
-                // Don't clear callRecognition here, just mark inactive
             };
             
             callRecognition.onerror = (e) => {
-                console.warn("Recognition error:", e.error);
+                console.warn("Call recognition error:", e.error);
                 isCallListening = false;
                 callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
-                callStatusSpan.innerText = "⚠️ Error, tap Talk again";
-                setTimeout(() => {
-                    if (isCallActive && callStatusSpan.innerText.includes("Error")) {
-                        callStatusSpan.innerText = "🔴 Tap Talk to speak";
-                    }
-                }, 1500);
+                if (e.error !== 'no-speech') {
+                    callStatusSpan.innerText = "⚠️ Error, tap Talk again";
+                    setTimeout(() => {
+                        if (isCallActive && callStatusSpan.innerText.includes("Error")) {
+                            callStatusSpan.innerText = "🔴 Tap Talk to speak";
+                        }
+                    }, 1500);
+                } else {
+                    callStatusSpan.innerText = "🔴 Tap Talk to speak";
+                }
             };
             
             callRecognition.onresult = async (e) => {
                 const transcript = e.results[0][0].transcript;
                 if (!transcript) return;
                 
-                // Stop recognition
                 callRecognition.stop();
                 isCallListening = false;
                 callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
                 callStatusSpan.innerText = "🤔 Thinking...";
                 
-                // Add to chat and get response
                 addUserMessage(transcript);
                 let reply = await processMessage(transcript, true);
                 if (!reply) reply = "Sorry, I didn't catch that. Can you repeat? 🎀";
@@ -882,58 +886,7 @@
                 startCallListening();
             }
         };
-        
         endCallBtn.onclick = endCall;
-
-        // ========== VOICE TYPING (FIXED) ==========
-        function startVoiceTyping() {
-            if (!('webkitSpeechRecognition' in window)) {
-                alert("Speech recognition not supported.");
-                return;
-            }
-            
-            if (voiceRecognition) {
-                try { voiceRecognition.stop(); } catch(e) {}
-                voiceRecognition = null;
-            }
-            
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            voiceRecognition = new SpeechRecognition();
-            voiceRecognition.continuous = false;
-            voiceRecognition.interimResults = false;
-            voiceRecognition.lang = 'en-US';
-            
-            voiceRecognition.onstart = () => {
-                speakBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
-                speakBtn.style.color = '#c084fc';
-            };
-            
-            voiceRecognition.onend = () => {
-                speakBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-                speakBtn.style.color = '#9ca3af';
-                voiceRecognition = null;
-            };
-            
-            voiceRecognition.onerror = () => {
-                speakBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-                speakBtn.style.color = '#9ca3af';
-                voiceRecognition = null;
-                alert("Could not recognize speech. Please try again.");
-            };
-            
-            voiceRecognition.onresult = async (e) => {
-                const transcript = e.results[0][0].transcript;
-                if (transcript) {
-                    userInp.value = transcript;
-                    updateDynamicButton();
-                    await processMessage(transcript, false);
-                    userInp.value = '';
-                    updateDynamicButton();
-                }
-            };
-            
-            voiceRecognition.start();
-        }
 
         // ========== UI BUTTONS ==========
         function updateDynamicButton() {
@@ -955,7 +908,7 @@
             await processMessage(txt, false);
         }
 
-        // Event listeners
+        // Event Listeners
         userInp.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 80) + 'px';
@@ -969,7 +922,7 @@
             }
         });
 
-        autoBtn.onclick = () => alert("Auto detection active: 'image car', 'news', 'voice hello' work automatically.");
+        autoBtn.onclick = () => alert("Auto detection: 'image cat', 'news', 'voice hello' work automatically.");
         speakBtn.onclick = startVoiceTyping;
         
         newBtn.onclick = () => {
@@ -984,7 +937,7 @@
 
         // Global functions for action buttons
         window.copyMsg = (t) => { navigator.clipboard.writeText(t); alert("Copied!"); };
-        window.likeMsg = () => alert("💖 Thank you for your feedback!");
+        window.likeMsg = () => alert("💖 Thank you!");
         window.dislikeMsg = () => alert("🌸 Sorry, I'll improve!");
         window.speakMsg = (t) => speakText(t, null);
         window.shareMsg = (t) => { if(navigator.share) navigator.share({title:'DarkAI', text:t}); else alert("Share: "+t); };
