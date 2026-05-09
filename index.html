@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>DarkAI </title>
+    <title>DarkAI · Fixed Voice Assistant</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -24,7 +24,6 @@
             width: 100%;
         }
 
-        /* Main App - Flex responsive */
         .app {
             display: flex;
             height: 100vh;
@@ -33,7 +32,7 @@
             position: relative;
         }
 
-        /* Sidebar - responsive */
+        /* Sidebar */
         .sidebar {
             width: 260px;
             background: rgba(17, 22, 35, 0.98);
@@ -43,19 +42,15 @@
             flex-direction: column;
             transition: transform 0.25s ease;
             z-index: 30;
-            position: relative;
         }
 
-        /* Mobile sidebar hidden by default */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
                 top: 0;
                 left: 0;
                 height: 100%;
-                width: 260px;
                 transform: translateX(-100%);
-                box-shadow: none;
             }
             .sidebar.open {
                 transform: translateX(0);
@@ -122,7 +117,6 @@
             gap: 10px;
             font-size: 0.85rem;
             background: transparent;
-            transition: 0.1s;
         }
         .history-item:hover, .history-item.active {
             background: rgba(192, 132, 252, 0.15);
@@ -146,7 +140,7 @@
             border-radius: 50%;
         }
 
-        /* Main Chat Area - responsive flex column */
+        /* Main Chat */
         .main-chat {
             flex: 1;
             display: flex;
@@ -157,7 +151,6 @@
             overflow: hidden;
         }
 
-        /* Header - fixed height */
         .chat-header {
             padding: 0.8rem 1rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -202,11 +195,8 @@
             background-clip: text;
             color: transparent;
         }
-        @media (min-width: 769px) {
-            .header-logo h2 { font-size: 1.2rem; }
-        }
 
-        /* Messages wrapper - scrollable area */
+        /* Messages */
         .messages-wrapper {
             flex: 1;
             overflow-y: auto;
@@ -217,16 +207,13 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Message bubbles - responsive width */
         .message {
             display: flex;
             gap: 8px;
             max-width: 90%;
         }
         @media (min-width: 768px) {
-            .message {
-                max-width: 80%;
-            }
+            .message { max-width: 80%; }
         }
         .message.user {
             align-self: flex-end;
@@ -246,12 +233,8 @@
             flex-shrink: 0;
             font-size: 0.9rem;
         }
-        .user .avatar {
-            background: #c084fc;
-        }
-        .assistant .avatar {
-            background: linear-gradient(135deg, #c084fc, #a855f7);
-        }
+        .user .avatar { background: #c084fc; }
+        .assistant .avatar { background: linear-gradient(135deg, #c084fc, #a855f7); }
         .bubble {
             padding: 8px 14px;
             border-radius: 18px;
@@ -259,9 +242,6 @@
             font-size: 0.9rem;
             word-break: break-word;
             max-width: 100%;
-        }
-        @media (max-width: 480px) {
-            .bubble { font-size: 0.85rem; padding: 7px 12px; }
         }
         .user .bubble {
             background: #1e2438;
@@ -273,7 +253,6 @@
             border-bottom-left-radius: 4px;
         }
 
-        /* Action bar */
         .action-bar {
             display: flex;
             gap: 6px;
@@ -294,7 +273,6 @@
             color: #c084fc;
         }
 
-        /* Streaming cursor */
         .streaming-cursor {
             display: inline-block;
             width: 2px;
@@ -308,7 +286,7 @@
             50% { opacity: 0; }
         }
 
-        /* Input area - fixed at bottom */
+        /* Input */
         .input-area {
             padding: 0.8rem 1rem 1rem;
             background: #0a0e17;
@@ -339,9 +317,6 @@
             max-height: 80px;
             font-family: inherit;
         }
-        @media (max-width: 480px) {
-            .input-container textarea { font-size: 0.85rem; }
-        }
         .input-actions {
             display: flex;
             gap: 4px;
@@ -354,9 +329,8 @@
             color: #9ca3af;
             cursor: pointer;
             font-size: 1rem;
-            padding: 8px 8px;
+            padding: 8px;
             border-radius: 40px;
-            transition: 0.1s;
             width: 40px;
             height: 40px;
             display: flex;
@@ -385,7 +359,7 @@
             background: #a855f7;
         }
 
-        /* Call Modal - responsive */
+        /* Call Modal */
         .call-modal {
             position: fixed;
             top: 0;
@@ -452,7 +426,6 @@
             color: #0a0e17;
         }
 
-        /* Images in chat */
         .bubble img {
             max-width: 100%;
             max-height: 200px;
@@ -467,7 +440,6 @@
             margin: 5px 0;
         }
 
-        /* Hide scrollbar but keep functionality */
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: #111827; }
         ::-webkit-scrollbar-thumb { background: #c084fc; border-radius: 10px; }
@@ -475,7 +447,6 @@
 </head>
 <body>
 <div class="app">
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -486,25 +457,24 @@
         <button class="new-chat-btn" id="newChatBtn"><i class="fas fa-plus"></i> New Chat</button>
         <div class="history-list" id="historyList"></div>
         <div class="db-status">
-            <span class="green-dot"></span> Fast Mode
-            <span style="margin-left: auto;">🌸 Voice Ready</span>
+            <span class="green-dot"></span> Live
+            <span style="margin-left: auto;">🌸 Fixed</span>
         </div>
     </div>
 
-    <!-- Main Chat -->
     <div class="main-chat">
         <div class="chat-header">
             <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
             <div class="header-logo">
                 <i class="fas fa-user-astronaut"></i>
-                <h2>DarkAI</h2>
+                <h2>DarkAI · Voice Assistant</h2>
             </div>
         </div>
 
         <div class="messages-wrapper" id="messagesWrapper">
             <div style="text-align: center; margin-top: 2rem; opacity: 0.5;">
                 <i class="fas fa-comment-dots" style="font-size: 2rem; color: #c084fc;"></i>
-                <p style="margin-top: 6px;">🌸 Type, Speak, or Call — I reply fast</p>
+                <p style="margin-top: 6px;">🌸 Type, Speak, or Call — All working now</p>
             </div>
         </div>
 
@@ -512,8 +482,8 @@
             <div class="input-container">
                 <textarea id="userInput" rows="1" placeholder="Type your message..."></textarea>
                 <div class="input-actions">
-                    <button class="action-input-btn" id="autoBtn" title="Auto"><i class="fas fa-magic"></i></button>
-                    <button class="action-input-btn" id="speakBtn" title="Speak"><i class="fas fa-microphone"></i></button>
+                    <button class="action-input-btn" id="autoBtn"><i class="fas fa-magic"></i></button>
+                    <button class="action-input-btn" id="speakBtn"><i class="fas fa-microphone"></i></button>
                     <button class="dynamic-btn" id="dynamicBtn"><i class="fas fa-phone-alt"></i></button>
                 </div>
             </div>
@@ -521,7 +491,6 @@
     </div>
 </div>
 
-<!-- Call Modal -->
 <div class="call-modal" id="callModal">
     <div class="call-card">
         <div class="call-avatar"><i class="fas fa-female"></i></div>
@@ -535,409 +504,508 @@
 </div>
 
 <script>
-    // ========== FAST CONFIG ==========
-    const CHAT_API_1 = "https://www.gajarbotol.site/Tech_master/api/chatfun.php?question=";
-    const CHAT_API_2 = "https://www.gajarbotol.site/Tech_master/api/custom-ai.php?question=";
-    const VOICE_API = "https://www.gajarbotol.site/Tech_master/api/text-to-voice.php?text=";
-    const IMAGE_API = "https://deepimg-imggen-api-by-tech-master.vercel.app/api/deepimg?prompt=";
-    const NEWS_API = "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=e8d25c24a48349a2b21bc393171de5cf";
+    (function() {
+        // ========== CONFIG ==========
+        const CHAT_API_1 = "https://www.gajarbotol.site/Tech_master/api/chatfun.php?question=";
+        const CHAT_API_2 = "https://www.gajarbotol.site/Tech_master/api/custom-ai.php?question=";
+        const VOICE_URL = "https://www.gajarbotol.site/Tech_master/api/text-to-voice.php?text=";
+        const IMAGE_API = "https://deepimg-imggen-api-by-tech-master.vercel.app/api/deepimg?prompt=";
+        const NEWS_API = "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=e8d25c24a48349a2b21bc393171de5cf";
 
-    const AI_NAME = "DarkAI";
-    const CREATOR = "Google";
+        const AI_NAME = "DarkAI";
+        const CREATOR = "Google";
 
-    // ========== STATE ==========
-    let conversations = [];
-    let currentChatId = null;
-    let isProcessing = false;
-    let synth = window.speechSynthesis;
-    let femaleVoice = null;
-    let isCallActive = false;
-    let callRecog = null;
-
-    function genId() { return Date.now() + '-' + Math.random().toString(36).substr(2, 5); }
-    function initConv() {
-        const id = genId();
-        conversations = [{ id: id, name: "Chat", messages: [] }];
-        currentChatId = id;
-    }
-    initConv();
-
-    // DOM Elements
-    const msgsDiv = document.getElementById('messagesWrapper');
-    const userInp = document.getElementById('userInput');
-    const dynBtn = document.getElementById('dynamicBtn');
-    const autoBtn = document.getElementById('autoBtn');
-    const speakBtn = document.getElementById('speakBtn');
-    const newBtn = document.getElementById('newChatBtn');
-    const histDiv = document.getElementById('historyList');
-    const sidebar = document.getElementById('sidebar');
-    const menuBtn = document.getElementById('menuBtn');
-    const callModal = document.getElementById('callModal');
-    const callMicBtn = document.getElementById('callMicBtn');
-    const endCallBtn = document.getElementById('endCallBtn');
-    const callStatusSpan = document.getElementById('callStatusText');
-
-    // Sidebar toggle for mobile
-    menuBtn.onclick = () => {
-        sidebar.classList.toggle('open');
-    };
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
-            if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-                sidebar.classList.remove('open');
-            }
-        }
-    });
-
-    function getChat() { return conversations.find(c => c.id === currentChatId) || conversations[0]; }
-    function save() { localStorage.setItem('darkai_fast_v2', JSON.stringify(conversations)); localStorage.setItem('darkai_fast_id_v2', currentChatId); }
-    function load() {
-        const stored = localStorage.getItem('darkai_fast_v2');
-        if (stored) {
-            try {
-                conversations = JSON.parse(stored);
-                currentChatId = localStorage.getItem('darkai_fast_id_v2') || conversations[0]?.id;
-                if (!currentChatId || !conversations.find(c=>c.id===currentChatId)) currentChatId = conversations[0]?.id;
-            } catch(e) {}
-        }
-        if (!conversations.length) initConv();
-        renderHist();
-        renderMsgs();
-    }
-
-    function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-
-    function renderHist() {
-        histDiv.innerHTML = '';
-        conversations.forEach(c => {
-            const item = document.createElement('div');
-            item.className = `history-item ${c.id === currentChatId ? 'active' : ''}`;
-            item.innerHTML = `<i class="fas fa-comment"></i> <span>${escapeHtml(c.name)}</span>`;
-            item.onclick = () => { 
-                currentChatId = c.id; 
-                renderMsgs(); 
-                renderHist(); 
-                if (window.innerWidth <= 768) sidebar.classList.remove('open');
-            };
-            histDiv.appendChild(item);
-        });
-    }
-
-    let streamInterval = null;
-    function streamText(bubbleEl, fullText, onDone) {
-        if (streamInterval) clearInterval(streamInterval);
-        bubbleEl.innerHTML = '';
-        let i = 0;
-        const interval = setInterval(() => {
-            if (i < fullText.length) {
-                bubbleEl.innerHTML = fullText.substring(0, i+1) + '<span class="streaming-cursor"></span>';
-                i++;
-                msgsDiv.scrollTop = msgsDiv.scrollHeight;
-            } else {
-                clearInterval(interval);
-                bubbleEl.innerHTML = fullText;
-                if (onDone) onDone();
-                streamInterval = null;
-            }
-        }, 18);
-        streamInterval = interval;
-    }
-
-    function addAssistantMsg(content, extra = {}) {
-        const chat = getChat();
-        const div = document.createElement('div');
-        div.className = 'message assistant';
-        div.innerHTML = `<div class="avatar"><i class="fas fa-female"></i></div><div class="bubble" id="temp-${Date.now()}"><span class="streaming-cursor"></span><div class="action-bar"><button class="action-btn" onclick="copyMsg('${escapeHtml(content).replace(/'/g, "\\'")}')">📋</button><button class="action-btn" onclick="likeMsg()">👍</button><button class="action-btn" onclick="dislikeMsg()">👎</button><button class="action-btn" onclick="speakMsg('${escapeHtml(content).replace(/'/g, "\\'")}')">🔊</button><button class="action-btn" onclick="shareMsg('${escapeHtml(content).replace(/'/g, "\\'")}')">🔗</button></div></div>`;
-        msgsDiv.appendChild(div);
-        const bubble = div.querySelector('.bubble');
-        streamText(bubble, content, () => {
-            const final = { role: 'assistant', content: content, ...extra };
-            chat.messages.push(final);
-            save();
-            renderHist();
-        });
-        msgsDiv.scrollTop = msgsDiv.scrollHeight;
-    }
-
-    function addUserMsg(content) {
-        const chat = getChat();
-        chat.messages.push({ role: 'user', content: content });
-        if (chat.messages.filter(m=>m.role==='user').length === 1) chat.name = content.substring(0,22)+(content.length>22?'…':'');
-        save();
-        renderMsgs();
-    }
-
-    function renderMsgs() {
-        const chat = getChat();
-        msgsDiv.innerHTML = '';
-        if (!chat.messages.length) {
-            msgsDiv.innerHTML = `<div style="text-align:center; margin-top:2rem; opacity:0.5;"><i class="fas fa-comment-dots" style="font-size:2rem; color:#c084fc;"></i><p style="margin-top:6px;">🌸 Type, Speak, or Call — I reply fast</p></div>`;
-            return;
-        }
-        chat.messages.forEach(msg => {
-            const d = document.createElement('div');
-            d.className = `message ${msg.role}`;
-            const av = msg.role === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-female"></i>';
-            let html = msg.role === 'assistant' && typeof marked !== 'undefined' ? marked.parse(msg.content) : msg.content.replace(/\n/g,'<br>');
-            if (msg.imageUrl) html += `<br><img src="${msg.imageUrl}" onclick="openLightbox('${msg.imageUrl}')" style="max-width:100%; border-radius:12px; margin-top:5px;">`;
-            if (msg.newsHtml) html += `<div>${msg.newsHtml}</div>`;
-            if (msg.voiceUrl) html += `<div><audio controls src="${msg.voiceUrl}"></audio></div>`;
-            d.innerHTML = `<div class="avatar">${av}</div><div class="bubble">${html}${msg.role === 'assistant' ? `<div class="action-bar"><button class="action-btn" onclick="copyMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">📋</button><button class="action-btn" onclick="likeMsg()">👍</button><button class="action-btn" onclick="dislikeMsg()">👎</button><button class="action-btn" onclick="speakMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">🔊</button><button class="action-btn" onclick="shareMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">🔗</button></div>` : ''}</div>`;
-            msgsDiv.appendChild(d);
-        });
-        msgsDiv.scrollTop = msgsDiv.scrollHeight;
-    }
-
-    // Identity check
-    function checkId(text) {
-        const l = text.toLowerCase();
-        if (l.includes("তোমার নাম") || l.includes("what is your name") || l.includes("who are you")) return AI_NAME;
-        if (l.includes("কে বানিয়েছে") || l.includes("who created you") || l.includes("তোমাকে কে বানিয়েছে")) return CREATOR;
-        return null;
-    }
-
-    async function apiChat(q) {
-        try {
-            const r = await fetch(CHAT_API_1 + encodeURIComponent(q));
-            const d = await r.json();
-            if (d.success && d.reply) return d.reply;
-            throw new Error();
-        } catch {
-            try {
-                const r2 = await fetch(CHAT_API_2 + encodeURIComponent(q));
-                const d2 = await r2.json();
-                if (d2.success && d2.reply) return d2.reply;
-                return "Hello, I'm DarkAI. How can I help? 🌸";
-            } catch {
-                return "I'm here! Please say that again? 🎀";
-            }
-        }
-    }
-
-    async function processMsg(text, fromCall = false) {
-        if (isProcessing) return;
-        isProcessing = true;
-        if (!fromCall) addUserMsg(text);
+        // ========== STATE ==========
+        let conversations = [];
+        let currentChatId = null;
+        let isProcessing = false;
+        let streamInterval = null;
+        let synth = window.speechSynthesis;
+        let femaleVoice = null;
         
-        const idRep = checkId(text);
-        if (idRep) {
-            const rep = idRep === "Google" ? "Google created me! I'm DarkAI, made by Google. 💙" : idRep;
-            addAssistantMsg(rep);
-            isProcessing = false;
-            return rep;
-        }
+        // Call state
+        let isCallActive = false;
+        let callRecognition = null;
+        let isCallListening = false;
 
-        const low = text.toLowerCase();
-        if (low.includes("image") || low.includes("img")) {
-            let clean = text.replace(/image|img/gi,'').trim();
-            if (!clean) clean = "beautiful landscape";
-            const imgUrl = IMAGE_API + encodeURIComponent(clean) + "&size=3:2";
-            addAssistantMsg(`🌸 Image: "${clean}"`, { imageUrl: imgUrl });
-            isProcessing = false;
-            return "Image generated";
+        // Voice typing state
+        let voiceRecognition = null;
+
+        // Helper functions
+        function genId() { return Date.now() + '-' + Math.random().toString(36).substr(2, 5); }
+        
+        function initConv() {
+            const id = genId();
+            conversations = [{ id: id, name: "Chat", messages: [] }];
+            currentChatId = id;
         }
-        if (low.includes("news")) {
-            try {
-                const res = await fetch(NEWS_API);
-                const data = await res.json();
-                if (data.articles) {
-                    let nh = `<div><strong>📰 News</strong></div>`;
-                    data.articles.slice(0,2).forEach(a => {
-                        nh += `<div class="news-card"><b>${a.title}</b><br><a href="${a.url}" target="_blank" style="color:#c084fc;">Read →</a></div>`;
-                    });
-                    addAssistantMsg("Latest news:", { newsHtml: nh });
-                    isProcessing = false;
-                    return "News delivered";
+        initConv();
+
+        // DOM Elements
+        const msgsDiv = document.getElementById('messagesWrapper');
+        const userInp = document.getElementById('userInput');
+        const dynBtn = document.getElementById('dynamicBtn');
+        const autoBtn = document.getElementById('autoBtn');
+        const speakBtn = document.getElementById('speakBtn');
+        const newBtn = document.getElementById('newChatBtn');
+        const histDiv = document.getElementById('historyList');
+        const sidebar = document.getElementById('sidebar');
+        const menuBtn = document.getElementById('menuBtn');
+        const callModal = document.getElementById('callModal');
+        const callMicBtn = document.getElementById('callMicBtn');
+        const endCallBtn = document.getElementById('endCallBtn');
+        const callStatusSpan = document.getElementById('callStatusText');
+
+        // Sidebar toggle
+        menuBtn.onclick = () => sidebar.classList.toggle('open');
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
+                if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+                    sidebar.classList.remove('open');
                 }
-            } catch(e) {}
-            addAssistantMsg("News unavailable.");
-            isProcessing = false;
-            return "News error";
-        }
-
-        const reply = await apiChat(text);
-        addAssistantMsg(reply);
-        isProcessing = false;
-        return reply;
-    }
-
-    // Female voice
-    function getFemale() {
-        return new Promise(resolve => {
-            if (femaleVoice) resolve(femaleVoice);
-            const voices = synth.getVoices();
-            const fv = voices.find(v => v.name.includes("Google UK English Female") || v.name.includes("Samantha") || v.name.includes("Microsoft Zira") || (v.lang.includes("en") && v.name.includes("Female")));
-            femaleVoice = fv || voices[0];
-            resolve(femaleVoice);
+            }
         });
-    }
-    if (synth) synth.onvoiceschanged = () => getFemale();
-    getFemale();
 
-    function speakFast(text, onEnd) {
-        if (!synth) return;
-        const utter = new SpeechSynthesisUtterance(text);
-        if (femaleVoice) utter.voice = femaleVoice;
-        utter.rate = 0.95;
-        utter.pitch = 1.2;
-        utter.onend = onEnd;
-        synth.speak(utter);
-    }
-
-    // Call system
-    function startCall() {
-        if (isCallActive) return;
-        isCallActive = true;
-        callModal.classList.add('active');
-        callStatusSpan.innerText = "🔴 Tap Talk to speak";
-    }
-
-    function startCallListening() {
-        if (!('webkitSpeechRecognition' in window)) {
-            alert("Speech not supported");
-            return;
+        function getChat() { return conversations.find(c => c.id === currentChatId) || conversations[0]; }
+        
+        function save() { 
+            localStorage.setItem('darkai_fixed', JSON.stringify(conversations)); 
+            localStorage.setItem('darkai_fixed_id', currentChatId); 
         }
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        callRecog = new SR();
-        callRecog.continuous = false;
-        callRecog.interimResults = false;
-        callRecog.lang = 'en-US';
-        callRecog.onstart = () => {
-            callStatusSpan.innerText = "🔴 Listening...";
-            callMicBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Stop';
-        };
-        callRecog.onend = () => {
-            callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
-        };
-        callRecog.onresult = async (e) => {
-            const txt = e.results[0][0].transcript;
-            if (!txt) return;
-            callRecog.stop();
-            callStatusSpan.innerText = "🤔 Thinking...";
-            addUserMsg(txt);
-            let rep = await processMsg(txt, true);
-            if (!rep) rep = "Sorry? Please repeat 🎀";
-            callStatusSpan.innerText = "🔊 Speaking...";
-            speakFast(rep, () => {
-                if (isCallActive) callStatusSpan.innerText = "🔴 Tap Talk again";
+        
+        function load() {
+            const stored = localStorage.getItem('darkai_fixed');
+            if (stored) {
+                try {
+                    conversations = JSON.parse(stored);
+                    currentChatId = localStorage.getItem('darkai_fixed_id') || conversations[0]?.id;
+                    if (!currentChatId || !conversations.find(c=>c.id===currentChatId)) currentChatId = conversations[0]?.id;
+                } catch(e) {}
+            }
+            if (!conversations.length) initConv();
+            renderHistory();
+            renderMessages();
+        }
+
+        function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+        function renderHistory() {
+            histDiv.innerHTML = '';
+            conversations.forEach(c => {
+                const item = document.createElement('div');
+                item.className = `history-item ${c.id === currentChatId ? 'active' : ''}`;
+                item.innerHTML = `<i class="fas fa-comment"></i> <span>${escapeHtml(c.name)}</span>`;
+                item.onclick = () => { 
+                    currentChatId = c.id; 
+                    renderMessages(); 
+                    renderHistory(); 
+                    if (window.innerWidth <= 768) sidebar.classList.remove('open');
+                };
+                histDiv.appendChild(item);
             });
-        };
-        callRecog.start();
-    }
-
-    function stopCallListening() {
-        if (callRecog) { callRecog.stop(); callRecog = null; }
-        callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
-    }
-
-    function endCall() {
-        isCallActive = false;
-        if (callRecog) callRecog.stop();
-        synth.cancel();
-        callModal.classList.remove('active');
-        callRecog = null;
-    }
-
-    callMicBtn.onclick = () => {
-        if (!isCallActive) return;
-        if (callRecog && callRecog.start && callRecog.stop) {
-            stopCallListening();
-            callStatusSpan.innerText = "🔴 Tap Talk";
-        } else {
-            startCallListening();
         }
-    };
-    endCallBtn.onclick = endCall;
 
-    // UI Dynamics
-    function updateBtn() {
-        if (userInp.value.trim().length > 0) {
-            dynBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-            dynBtn.onclick = sendMsg;
-        } else {
-            dynBtn.innerHTML = '<i class="fas fa-phone-alt"></i>';
-            dynBtn.onclick = startCall;
+        // Streaming text
+        function streamText(bubbleEl, fullText, onDone) {
+            if (streamInterval) clearInterval(streamInterval);
+            bubbleEl.innerHTML = '';
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < fullText.length) {
+                    bubbleEl.innerHTML = fullText.substring(0, i+1) + '<span class="streaming-cursor"></span>';
+                    i++;
+                    msgsDiv.scrollTop = msgsDiv.scrollHeight;
+                } else {
+                    clearInterval(interval);
+                    bubbleEl.innerHTML = fullText;
+                    if (onDone) onDone();
+                    streamInterval = null;
+                }
+            }, 18);
+            streamInterval = interval;
         }
-    }
 
-    async function sendMsg() {
-        const txt = userInp.value.trim();
-        if (!txt || isProcessing) return;
-        userInp.value = '';
-        userInp.style.height = 'auto';
-        updateBtn();
-        await processMsg(txt, false);
-    }
-
-    userInp.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = Math.min(this.scrollHeight, 80) + 'px';
-        updateBtn();
-    });
-    userInp.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            if (userInp.value.trim()) sendMsg();
+        function addAssistantMessage(content, extra = {}) {
+            const chat = getChat();
+            const div = document.createElement('div');
+            div.className = 'message assistant';
+            div.innerHTML = `<div class="avatar"><i class="fas fa-female"></i></div><div class="bubble" id="temp-${Date.now()}"><span class="streaming-cursor"></span><div class="action-bar"><button class="action-btn" onclick="window.copyMsg('${escapeHtml(content).replace(/'/g, "\\'")}')">📋</button><button class="action-btn" onclick="window.likeMsg()">👍</button><button class="action-btn" onclick="window.dislikeMsg()">👎</button><button class="action-btn" onclick="window.speakMsg('${escapeHtml(content).replace(/'/g, "\\'")}')">🔊</button><button class="action-btn" onclick="window.shareMsg('${escapeHtml(content).replace(/'/g, "\\'")}')">🔗</button></div></div>`;
+            msgsDiv.appendChild(div);
+            const bubble = div.querySelector('.bubble');
+            streamText(bubble, content, () => {
+                const final = { role: 'assistant', content: content, ...extra };
+                chat.messages.push(final);
+                save();
+                renderHistory();
+            });
+            msgsDiv.scrollTop = msgsDiv.scrollHeight;
         }
-    });
 
-    autoBtn.onclick = () => alert("Auto: image, news, voice commands work");
-
-    // Voice typing
-    let voiceRecog = null;
-    function startVoiceType() {
-        if (!('webkitSpeechRecognition' in window)) {
-            alert("Speech not supported");
-            return;
+        function addUserMessage(content) {
+            const chat = getChat();
+            chat.messages.push({ role: 'user', content: content });
+            if (chat.messages.filter(m=>m.role==='user').length === 1) {
+                chat.name = content.substring(0,22)+(content.length>22?'…':'');
+            }
+            save();
+            renderMessages();
         }
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        voiceRecog = new SR();
-        voiceRecog.continuous = false;
-        voiceRecog.interimResults = false;
-        voiceRecog.lang = 'en-US';
-        voiceRecog.onstart = () => { speakBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>'; };
-        voiceRecog.onend = () => { speakBtn.innerHTML = '<i class="fas fa-microphone"></i>'; voiceRecog = null; };
-        voiceRecog.onresult = async (e) => {
-            const txt = e.results[0][0].transcript;
-            if (txt) {
-                userInp.value = txt;
-                updateBtn();
-                await processMsg(txt, false);
-                userInp.value = '';
-                updateBtn();
+
+        function renderMessages() {
+            const chat = getChat();
+            msgsDiv.innerHTML = '';
+            if (!chat.messages.length) {
+                msgsDiv.innerHTML = `<div style="text-align:center; margin-top:2rem; opacity:0.5;"><i class="fas fa-comment-dots" style="font-size:2rem; color:#c084fc;"></i><p style="margin-top:6px;">🌸 Type, Speak, or Call — All working now</p></div>`;
+                return;
+            }
+            chat.messages.forEach(msg => {
+                const d = document.createElement('div');
+                d.className = `message ${msg.role}`;
+                const av = msg.role === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-female"></i>';
+                let html = msg.role === 'assistant' && typeof marked !== 'undefined' ? marked.parse(msg.content) : msg.content.replace(/\n/g,'<br>');
+                if (msg.imageUrl) html += `<br><img src="${msg.imageUrl}" onclick="window.openLightbox('${msg.imageUrl}')" style="max-width:100%; border-radius:12px; margin-top:5px;">`;
+                if (msg.newsHtml) html += `<div>${msg.newsHtml}</div>`;
+                if (msg.voiceUrl) html += `<div><audio controls src="${msg.voiceUrl}"></audio></div>`;
+                d.innerHTML = `<div class="avatar">${av}</div><div class="bubble">${html}${msg.role === 'assistant' ? `<div class="action-bar"><button class="action-btn" onclick="window.copyMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">📋</button><button class="action-btn" onclick="window.likeMsg()">👍</button><button class="action-btn" onclick="window.dislikeMsg()">👎</button><button class="action-btn" onclick="window.speakMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">🔊</button><button class="action-btn" onclick="window.shareMsg('${escapeHtml(msg.content).replace(/'/g, "\\'")}')">🔗</button></div>` : ''}</div>`;
+                msgsDiv.appendChild(d);
+            });
+            msgsDiv.scrollTop = msgsDiv.scrollHeight;
+        }
+
+        // Identity check
+        function checkIdentity(text) {
+            const lower = text.toLowerCase();
+            if (lower.includes("তোমার নাম") || lower.includes("what is your name") || lower.includes("who are you")) return AI_NAME;
+            if (lower.includes("কে বানিয়েছে") || lower.includes("who created you") || lower.includes("তোমাকে কে বানিয়েছে")) return CREATOR;
+            return null;
+        }
+
+        // API Chat
+        async function callChatAPI(question) {
+            try {
+                const res = await fetch(CHAT_API_1 + encodeURIComponent(question));
+                const data = await res.json();
+                if (data.success && data.reply) return data.reply;
+                throw new Error();
+            } catch {
+                try {
+                    const res2 = await fetch(CHAT_API_2 + encodeURIComponent(question));
+                    const data2 = await res2.json();
+                    if (data2.success && data2.reply) return data2.reply;
+                    return "Hello, I'm DarkAI. How can I help you today? 🌸";
+                } catch {
+                    return "I'm here! Please say that again? 🎀";
+                }
+            }
+        }
+
+        // Process message
+        async function processMessage(text, fromCall = false) {
+            if (isProcessing) return;
+            isProcessing = true;
+            if (!fromCall) addUserMessage(text);
+            
+            const identity = checkIdentity(text);
+            if (identity) {
+                const reply = identity === "Google" ? "Google created me! I'm DarkAI, made by Google. 💙" : identity;
+                addAssistantMessage(reply);
+                isProcessing = false;
+                return reply;
+            }
+
+            const lower = text.toLowerCase();
+            if (lower.includes("image") || lower.includes("img")) {
+                let clean = text.replace(/image|img/gi,'').trim();
+                if (!clean) clean = "beautiful landscape";
+                const imgUrl = IMAGE_API + encodeURIComponent(clean) + "&size=3:2";
+                addAssistantMessage(`🌸 Image: "${clean}"`, { imageUrl: imgUrl });
+                isProcessing = false;
+                return "Image generated";
+            }
+            
+            if (lower.includes("news")) {
+                try {
+                    const res = await fetch(NEWS_API);
+                    const data = await res.json();
+                    if (data.articles && data.articles.length) {
+                        let nh = `<div><strong>📰 Latest News</strong></div>`;
+                        data.articles.slice(0,2).forEach(a => {
+                            nh += `<div class="news-card"><b>${a.title}</b><br><small>${a.description || ''}</small><br><a href="${a.url}" target="_blank" style="color:#c084fc;">Read →</a></div>`;
+                        });
+                        addAssistantMessage("Latest news updates:", { newsHtml: nh });
+                        isProcessing = false;
+                        return "News delivered";
+                    }
+                } catch(e) {}
+                addAssistantMessage("News unavailable at the moment.");
+                isProcessing = false;
+                return "News error";
+            }
+
+            const reply = await callChatAPI(text);
+            addAssistantMessage(reply);
+            isProcessing = false;
+            return reply;
+        }
+
+        // Female Voice Setup
+        function getFemaleVoice() {
+            return new Promise(resolve => {
+                if (femaleVoice) resolve(femaleVoice);
+                const voices = synth.getVoices();
+                const fv = voices.find(v => v.name.includes("Google UK English Female") || v.name.includes("Samantha") || v.name.includes("Microsoft Zira") || (v.lang.includes("en") && v.name.toLowerCase().includes("female")));
+                femaleVoice = fv || voices.find(v => v.lang.startsWith('en')) || voices[0];
+                resolve(femaleVoice);
+            });
+        }
+        
+        if (synth) {
+            synth.onvoiceschanged = () => getFemaleVoice();
+            getFemaleVoice();
+        }
+
+        function speakText(text, onEnd) {
+            if (!synth) return;
+            const utterance = new SpeechSynthesisUtterance(text);
+            if (femaleVoice) utterance.voice = femaleVoice;
+            utterance.rate = 0.95;
+            utterance.pitch = 1.2;
+            utterance.onend = onEnd;
+            synth.speak(utterance);
+        }
+
+        // ========== CALL SYSTEM (FIXED) ==========
+        function startCall() {
+            if (isCallActive) return;
+            isCallActive = true;
+            callModal.classList.add('active');
+            callStatusSpan.innerText = "🔴 Tap Talk to speak";
+            // Reset call button state
+            callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
+            isCallListening = false;
+        }
+
+        function startCallListening() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Speech recognition not supported in this browser.");
+                return;
+            }
+            
+            // Stop any existing recognition first
+            if (callRecognition) {
+                try { callRecognition.stop(); } catch(e) {}
+                callRecognition = null;
+            }
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            callRecognition = new SpeechRecognition();
+            callRecognition.continuous = false;
+            callRecognition.interimResults = false;
+            callRecognition.lang = 'en-US';
+            
+            callRecognition.onstart = () => {
+                isCallListening = true;
+                callStatusSpan.innerText = "🔴 Listening... Speak now";
+                callMicBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Stop';
+            };
+            
+            callRecognition.onend = () => {
+                isCallListening = false;
+                callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
+                // Don't clear callRecognition here, just mark inactive
+            };
+            
+            callRecognition.onerror = (e) => {
+                console.warn("Recognition error:", e.error);
+                isCallListening = false;
+                callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
+                callStatusSpan.innerText = "⚠️ Error, tap Talk again";
+                setTimeout(() => {
+                    if (isCallActive && callStatusSpan.innerText.includes("Error")) {
+                        callStatusSpan.innerText = "🔴 Tap Talk to speak";
+                    }
+                }, 1500);
+            };
+            
+            callRecognition.onresult = async (e) => {
+                const transcript = e.results[0][0].transcript;
+                if (!transcript) return;
+                
+                // Stop recognition
+                callRecognition.stop();
+                isCallListening = false;
+                callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
+                callStatusSpan.innerText = "🤔 Thinking...";
+                
+                // Add to chat and get response
+                addUserMessage(transcript);
+                let reply = await processMessage(transcript, true);
+                if (!reply) reply = "Sorry, I didn't catch that. Can you repeat? 🎀";
+                
+                callStatusSpan.innerText = "🔊 Speaking...";
+                speakText(reply, () => {
+                    if (isCallActive) {
+                        callStatusSpan.innerText = "🔴 Tap Talk to speak again";
+                    }
+                });
+            };
+            
+            callRecognition.start();
+        }
+
+        function stopCallListening() {
+            if (callRecognition) {
+                try { callRecognition.stop(); } catch(e) {}
+                callRecognition = null;
+            }
+            isCallListening = false;
+            callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
+        }
+
+        function endCall() {
+            isCallActive = false;
+            if (callRecognition) {
+                try { callRecognition.stop(); } catch(e) {}
+                callRecognition = null;
+            }
+            if (synth) synth.cancel();
+            callModal.classList.remove('active');
+            isCallListening = false;
+        }
+
+        callMicBtn.onclick = () => {
+            if (!isCallActive) return;
+            if (isCallListening) {
+                stopCallListening();
+                callStatusSpan.innerText = "🔴 Tap Talk to speak";
+            } else {
+                startCallListening();
             }
         };
-        voiceRecog.start();
-    }
-    speakBtn.onclick = startVoiceType;
+        
+        endCallBtn.onclick = endCall;
 
-    newBtn.onclick = () => {
-        const id = genId();
-        conversations.push({ id: id, name: "Chat", messages: [] });
-        currentChatId = id;
-        save();
-        renderMsgs();
-        renderHist();
-        if (window.innerWidth <= 768) sidebar.classList.remove('open');
-    };
+        // ========== VOICE TYPING (FIXED) ==========
+        function startVoiceTyping() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Speech recognition not supported.");
+                return;
+            }
+            
+            if (voiceRecognition) {
+                try { voiceRecognition.stop(); } catch(e) {}
+                voiceRecognition = null;
+            }
+            
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            voiceRecognition = new SpeechRecognition();
+            voiceRecognition.continuous = false;
+            voiceRecognition.interimResults = false;
+            voiceRecognition.lang = 'en-US';
+            
+            voiceRecognition.onstart = () => {
+                speakBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                speakBtn.style.color = '#c084fc';
+            };
+            
+            voiceRecognition.onend = () => {
+                speakBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                speakBtn.style.color = '#9ca3af';
+                voiceRecognition = null;
+            };
+            
+            voiceRecognition.onerror = () => {
+                speakBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                speakBtn.style.color = '#9ca3af';
+                voiceRecognition = null;
+                alert("Could not recognize speech. Please try again.");
+            };
+            
+            voiceRecognition.onresult = async (e) => {
+                const transcript = e.results[0][0].transcript;
+                if (transcript) {
+                    userInp.value = transcript;
+                    updateDynamicButton();
+                    await processMessage(transcript, false);
+                    userInp.value = '';
+                    updateDynamicButton();
+                }
+            };
+            
+            voiceRecognition.start();
+        }
 
-    // Global functions
-    window.copyMsg = (t) => { navigator.clipboard.writeText(t); alert("Copied!"); };
-    window.likeMsg = () => alert("💖 Thanks!");
-    window.dislikeMsg = () => alert("🌸 Noted");
-    window.speakMsg = (t) => speakFast(t, null);
-    window.shareMsg = (t) => { if(navigator.share) navigator.share({title:'DarkAI', text:t}); else alert("Share: "+t); };
-    window.openLightbox = (src) => {
-        const d = document.createElement('div');
-        d.style.position = 'fixed'; d.style.inset = 0; d.style.background = 'rgba(0,0,0,0.9)'; d.style.display = 'flex';
-        d.style.alignItems = 'center'; d.style.justifyContent = 'center'; d.style.zIndex = 2000;
-        d.innerHTML = `<img src="${src}" style="max-width:90%; max-height:90%; border-radius:16px;"><span style="position:absolute;top:20px;right:30px;font-size:32px;cursor:pointer;" onclick="this.parentElement.remove()">&times;</span>`;
-        document.body.appendChild(d);
-    };
+        // ========== UI BUTTONS ==========
+        function updateDynamicButton() {
+            if (userInp.value.trim().length > 0) {
+                dynBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+                dynBtn.onclick = sendMessage;
+            } else {
+                dynBtn.innerHTML = '<i class="fas fa-phone-alt"></i>';
+                dynBtn.onclick = startCall;
+            }
+        }
 
-    updateBtn();
-    load();
+        async function sendMessage() {
+            const txt = userInp.value.trim();
+            if (!txt || isProcessing) return;
+            userInp.value = '';
+            userInp.style.height = 'auto';
+            updateDynamicButton();
+            await processMessage(txt, false);
+        }
+
+        // Event listeners
+        userInp.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 80) + 'px';
+            updateDynamicButton();
+        });
+        
+        userInp.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (userInp.value.trim()) sendMessage();
+            }
+        });
+
+        autoBtn.onclick = () => alert("Auto detection active: 'image car', 'news', 'voice hello' work automatically.");
+        speakBtn.onclick = startVoiceTyping;
+        
+        newBtn.onclick = () => {
+            const id = genId();
+            conversations.push({ id: id, name: "Chat", messages: [] });
+            currentChatId = id;
+            save();
+            renderMessages();
+            renderHistory();
+            if (window.innerWidth <= 768) sidebar.classList.remove('open');
+        };
+
+        // Global functions for action buttons
+        window.copyMsg = (t) => { navigator.clipboard.writeText(t); alert("Copied!"); };
+        window.likeMsg = () => alert("💖 Thank you for your feedback!");
+        window.dislikeMsg = () => alert("🌸 Sorry, I'll improve!");
+        window.speakMsg = (t) => speakText(t, null);
+        window.shareMsg = (t) => { if(navigator.share) navigator.share({title:'DarkAI', text:t}); else alert("Share: "+t); };
+        
+        window.openLightbox = (src) => {
+            const div = document.createElement('div');
+            div.style.position = 'fixed';
+            div.style.inset = '0';
+            div.style.background = 'rgba(0,0,0,0.95)';
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+            div.style.justifyContent = 'center';
+            div.style.zIndex = '2000';
+            div.innerHTML = `<img src="${src}" style="max-width:90%; max-height:90%; border-radius:16px;"><span style="position:absolute;top:20px;right:30px;font-size:32px;cursor:pointer;" onclick="this.parentElement.remove()">&times;</span>`;
+            document.body.appendChild(div);
+        };
+
+        // Initialize
+        updateDynamicButton();
+        load();
+    })();
 </script>
 </body>
 </html>
