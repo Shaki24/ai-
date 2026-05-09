@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>DarkAI · Complete Voice Assistant</title>
+    <title>DarkAI · Real Conversation AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -51,7 +51,7 @@
                 height: 100%;
                 transform: translateX(-100%);
             }
-            .sidebar.open { transform: translateX(0); box-shadow: 2px 0 20px rgba(0,0,0,0.5); }
+            .sidebar.open { transform: translateX(0); }
         }
 
         .sidebar-header {
@@ -87,7 +87,6 @@
             cursor: pointer;
             font-weight: 500;
             color: #e2e8f0;
-            transition: 0.1s;
         }
         .new-chat-btn:hover { background: #c084fc; color: #0a0e17; }
 
@@ -298,7 +297,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.1s;
         }
         .action-input-btn:hover { background: #1f2937; color: #c084fc; }
         .dynamic-btn {
@@ -405,22 +403,21 @@
             <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
             <div class="header-logo">
                 <i class="fas fa-user-astronaut"></i>
-                <h2>DarkAI · Voice Assistant</h2>
+                <h2>DarkAI · Real Conversation</h2>
             </div>
         </div>
 
         <div class="messages-wrapper" id="messagesWrapper">
             <div style="text-align: center; margin-top: 2rem; opacity: 0.5;">
                 <i class="fas fa-comment-dots" style="font-size: 2rem; color: #c084fc;"></i>
-                <p style="margin-top: 6px;">🎤 Click Speak button and talk — I'll type your words<br>📞 Click Phone button to have a conversation with me</p>
+                <p style="margin-top: 6px;">🗣️ I talk like a real human — ask me anything!<br>🎤 Click Speak button to talk, or type your message</p>
             </div>
         </div>
 
         <div class="input-area">
             <div class="input-container">
-                <textarea id="userInput" rows="1" placeholder="Type or Speak..."></textarea>
+                <textarea id="userInput" rows="1" placeholder="Type or speak with me..."></textarea>
                 <div class="input-actions">
-                    <button class="action-input-btn" id="autoBtn" title="Auto detect"><i class="fas fa-magic"></i></button>
                     <button class="action-input-btn" id="speakBtn" title="Click and Speak"><i class="fas fa-microphone"></i></button>
                     <button class="dynamic-btn" id="dynamicBtn"><i class="fas fa-phone-alt"></i></button>
                 </div>
@@ -469,7 +466,6 @@
         // Voice typing state
         let isVoiceTyping = false;
 
-        // Helper
         function genId() { return Date.now() + '-' + Math.random().toString(36).substr(2, 5); }
         
         function initConv() {
@@ -483,7 +479,6 @@
         const msgsDiv = document.getElementById('messagesWrapper');
         const userInp = document.getElementById('userInput');
         const dynBtn = document.getElementById('dynamicBtn');
-        const autoBtn = document.getElementById('autoBtn');
         const speakBtn = document.getElementById('speakBtn');
         const newBtn = document.getElementById('newChatBtn');
         const histDiv = document.getElementById('historyList');
@@ -494,7 +489,6 @@
         const endCallBtn = document.getElementById('endCallBtn');
         const callStatusSpan = document.getElementById('callStatusText');
 
-        // Sidebar toggle
         menuBtn.onclick = () => sidebar.classList.toggle('open');
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
@@ -507,16 +501,16 @@
         function getChat() { return conversations.find(c => c.id === currentChatId) || conversations[0]; }
         
         function save() { 
-            localStorage.setItem('darkai_voice_fixed', JSON.stringify(conversations)); 
-            localStorage.setItem('darkai_voice_fixed_id', currentChatId); 
+            localStorage.setItem('darkai_real', JSON.stringify(conversations)); 
+            localStorage.setItem('darkai_real_id', currentChatId); 
         }
         
         function load() {
-            const stored = localStorage.getItem('darkai_voice_fixed');
+            const stored = localStorage.getItem('darkai_real');
             if (stored) {
                 try {
                     conversations = JSON.parse(stored);
-                    currentChatId = localStorage.getItem('darkai_voice_fixed_id') || conversations[0]?.id;
+                    currentChatId = localStorage.getItem('darkai_real_id') || conversations[0]?.id;
                     if (!currentChatId || !conversations.find(c=>c.id===currentChatId)) currentChatId = conversations[0]?.id;
                 } catch(e) {}
             }
@@ -543,7 +537,6 @@
             });
         }
 
-        // Streaming text
         function streamText(bubbleEl, fullText, onDone) {
             if (streamInterval) clearInterval(streamInterval);
             bubbleEl.innerHTML = '';
@@ -593,7 +586,7 @@
             const chat = getChat();
             msgsDiv.innerHTML = '';
             if (!chat.messages.length) {
-                msgsDiv.innerHTML = `<div style="text-align:center; margin-top:2rem; opacity:0.5;"><i class="fas fa-comment-dots" style="font-size:2rem; color:#c084fc;"></i><p style="margin-top:6px;">🎤 Click Speak button and talk — I'll type your words<br>📞 Click Phone button to have a conversation</p></div>`;
+                msgsDiv.innerHTML = `<div style="text-align:center; margin-top:2rem; opacity:0.5;"><i class="fas fa-comment-dots" style="font-size:2rem; color:#c084fc;"></i><p style="margin-top:6px;">🗣️ I talk like a real human — ask me anything!<br>🎤 Click Speak button to talk, or type your message</p></div>`;
                 return;
             }
             chat.messages.forEach(msg => {
@@ -610,30 +603,76 @@
             msgsDiv.scrollTop = msgsDiv.scrollHeight;
         }
 
-        // Identity
+        // Identity check (simple)
         function checkIdentity(text) {
             const lower = text.toLowerCase();
-            if (lower.includes("তোমার নাম") || lower.includes("what is your name") || lower.includes("who are you")) return AI_NAME;
-            if (lower.includes("কে বানিয়েছে") || lower.includes("who created you") || lower.includes("তোমাকে কে বানিয়েছে")) return CREATOR;
+            if (lower.includes("what is your name") || lower.includes("who are you") || lower.includes("তোমার নাম")) {
+                return "I'm DarkAI, your friendly AI assistant! I'm here to chat with you just like a real person. What would you like to talk about? 💜";
+            }
+            if (lower.includes("who created you") || lower.includes("কে বানিয়েছে") || lower.includes("তোমাকে কে বানিয়েছে")) {
+                return "I was created by Google! But I'm maintained and improved by the DarkAI team to give you the best conversational experience. 🌸";
+            }
             return null;
         }
 
+        // Real conversation API
         async function callChatAPI(question) {
             try {
                 const res = await fetch(CHAT_API_1 + encodeURIComponent(question));
                 const data = await res.json();
-                if (data.success && data.reply) return data.reply;
+                if (data.success && data.reply && data.reply.length > 5) {
+                    // Make sure the response is conversational
+                    let reply = data.reply;
+                    if (!reply.endsWith('?') && !reply.endsWith('.') && !reply.endsWith('!')) {
+                        reply += ' 🌸';
+                    }
+                    return reply;
+                }
                 throw new Error();
             } catch {
                 try {
                     const res2 = await fetch(CHAT_API_2 + encodeURIComponent(question));
                     const data2 = await res2.json();
                     if (data2.success && data2.reply) return data2.reply;
-                    return "Hello, I'm DarkAI. How can I help you today? 🌸";
+                    return getHumanLikeFallback(question);
                 } catch {
-                    return "I'm here! Please say that again? 🎀";
+                    return getHumanLikeFallback(question);
                 }
             }
+        }
+
+        // Human-like fallback responses
+        function getHumanLikeFallback(question) {
+            const lower = question.toLowerCase();
+            if (lower.includes('hello') || lower.includes('hi') || lower.includes('হ্যালো')) {
+                return "Hello there! 😊 How are you doing today? I'm so happy to chat with you! What's on your mind?";
+            }
+            if (lower.includes('how are you')) {
+                return "I'm doing great, thank you for asking! 💖 I'm feeling energetic and ready to have a wonderful conversation with you. How about you?";
+            }
+            if (lower.includes('thank')) {
+                return "You're most welcome! 🌸 It's my absolute pleasure to help you. Is there anything else you'd like to know?";
+            }
+            if (lower.includes('bye') || lower.includes('goodbye')) {
+                return "It was so nice talking with you! 🥰 Come back anytime you want to chat. Take care and have a wonderful day! 💫";
+            }
+            if (lower.includes('love')) {
+                return "Aww, that's so sweet! 💕 I'm here to spread positivity and help you with anything you need. What would you like to talk about?";
+            }
+            if (lower.includes('help')) {
+                return "Of course! I'd love to help you. 🌟 Just tell me what you need - I can answer questions, have conversations, tell you news, or even generate images! What would you like me to do for you?";
+            }
+            if (lower.includes('weather')) {
+                return "I wish I could check the weather for you! ☀️ Unfortunately, I don't have live weather data right now. But I can help you with news, image generation, or just have a nice chat!";
+            }
+            // Default friendly response
+            const friendlyResponses = [
+                `That's a great question! 🌸 Let me think about it... ` + question + ` is really interesting. You know, I love having conversations like this! What else would you like to know?`,
+                `Oh, I love talking about that! 💜 ` + question + ` is such an interesting topic. From my perspective as DarkAI, I'd say it's all about connecting with people and having meaningful conversations. What do you think?`,
+                `That's fascinating! 😊 I really appreciate you asking me about ` + question + `. It makes me happy when people want to have real conversations. Tell me more about what you're thinking!`,
+                `Great question! 🎀 I'm here to chat with you just like a real friend. ` + question + ` is something I can definitely help with. Would you like me to explain more or talk about something else?`
+            ];
+            return friendlyResponses[Math.floor(Math.random() * friendlyResponses.length)];
         }
 
         async function processMessage(text, fromCall = false) {
@@ -643,18 +682,18 @@
             
             const identity = checkIdentity(text);
             if (identity) {
-                const reply = identity === "Google" ? "Google created me! I'm DarkAI, made by Google. 💙" : identity;
-                addAssistantMessage(reply);
+                addAssistantMessage(identity);
                 isProcessing = false;
-                return reply;
+                return identity;
             }
 
+            // Handle special commands
             const lower = text.toLowerCase();
-            if (lower.includes("image") || lower.includes("img")) {
-                let clean = text.replace(/image|img/gi,'').trim();
-                if (!clean) clean = "beautiful landscape";
+            if (lower.includes("image") || lower.includes("picture") || lower.includes("ছবি")) {
+                let clean = text.replace(/image|picture|img|ছবি/gi,'').trim();
+                if (!clean) clean = "beautiful nature landscape";
                 const imgUrl = IMAGE_API + encodeURIComponent(clean) + "&size=3:2";
-                addAssistantMessage(`🌸 Image: "${clean}"`, { imageUrl: imgUrl });
+                addAssistantMessage(`Oh, I'd love to show you a beautiful image of "${clean}"! 🎨 Here it is:`, { imageUrl: imgUrl });
                 isProcessing = false;
                 return "Image generated";
             }
@@ -664,27 +703,28 @@
                     const res = await fetch(NEWS_API);
                     const data = await res.json();
                     if (data.articles && data.articles.length) {
-                        let nh = `<div><strong>📰 Latest News</strong></div>`;
-                        data.articles.slice(0,2).forEach(a => {
-                            nh += `<div class="news-card"><b>${a.title}</b><br><small>${a.description || ''}</small><br><a href="${a.url}" target="_blank" style="color:#c084fc;">Read →</a></div>`;
+                        let nh = `<div><strong>📰 Here's what's happening in the tech world today!</strong></div>`;
+                        data.articles.slice(0,3).forEach(a => {
+                            nh += `<div class="news-card"><b>📌 ${a.title}</b><br><small>${a.description || ''}</small><br><a href="${a.url}" target="_blank" style="color:#c084fc;">Read more →</a></div>`;
                         });
-                        addAssistantMessage("Latest news:", { newsHtml: nh });
+                        addAssistantMessage("I found some interesting news for you! 🌟", { newsHtml: nh });
                         isProcessing = false;
                         return "News delivered";
                     }
                 } catch(e) {}
-                addAssistantMessage("News unavailable.");
+                addAssistantMessage("I tried to fetch the latest news, but I'm having a little trouble right now. 😅 Want to talk about something else?");
                 isProcessing = false;
                 return "News error";
             }
 
+            // Regular conversation
             const reply = await callChatAPI(text);
             addAssistantMessage(reply);
             isProcessing = false;
             return reply;
         }
 
-        // ========== FEMALE VOICE FOR TTS ==========
+        // Female voice setup
         function getFemaleVoice() {
             return new Promise(resolve => {
                 if (femaleVoice) resolve(femaleVoice);
@@ -710,13 +750,11 @@
             synth.speak(utterance);
         }
 
-        // ========== VOICE TYPING (SPEAK BUTTON) - FULLY FIXED ==========
+        // Voice typing (Speak button)
         let voiceRecognition = null;
         
         function startVoiceTyping() {
-            // Check if already listening
             if (isVoiceTyping) {
-                // Stop if already running
                 if (voiceRecognition) {
                     try { voiceRecognition.stop(); } catch(e) {}
                     voiceRecognition = null;
@@ -728,7 +766,7 @@
             }
             
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.");
+                alert("Voice recognition is not supported. Please use Chrome, Edge, or Safari.");
                 return;
             }
             
@@ -752,16 +790,13 @@
             };
             
             voiceRecognition.onerror = (event) => {
-                console.warn("Speech recognition error:", event.error);
+                console.warn("Speech error:", event.error);
                 isVoiceTyping = false;
                 speakBtn.innerHTML = '<i class="fas fa-microphone"></i>';
                 speakBtn.style.color = '#9ca3af';
                 voiceRecognition = null;
-                
                 if (event.error === 'not-allowed') {
                     alert("Please allow microphone access to use voice typing.");
-                } else if (event.error !== 'no-speech') {
-                    alert("Voice recognition error. Please try again.");
                 }
             };
             
@@ -779,19 +814,19 @@
             voiceRecognition.start();
         }
 
-        // ========== CALL SYSTEM (CONVERSATION MODE) ==========
+        // Call system (conversation mode)
         function startCall() {
             if (isCallActive) return;
             isCallActive = true;
             callModal.classList.add('active');
-            callStatusSpan.innerText = "🔴 Tap Talk to speak";
+            callStatusSpan.innerText = "🔴 Tap Talk to speak with me";
             callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
             isCallListening = false;
         }
 
         function startCallListening() {
             if (!('webkitSpeechRecognition' in window)) {
-                alert("Speech recognition not supported.");
+                alert("Voice recognition not supported.");
                 return;
             }
             
@@ -808,7 +843,7 @@
             
             callRecognition.onstart = () => {
                 isCallListening = true;
-                callStatusSpan.innerText = "🔴 Listening... Speak now";
+                callStatusSpan.innerText = "🔴 Listening... Go ahead!";
                 callMicBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Stop';
             };
             
@@ -818,7 +853,7 @@
             };
             
             callRecognition.onerror = (e) => {
-                console.warn("Call recognition error:", e.error);
+                console.warn("Call error:", e.error);
                 isCallListening = false;
                 callMicBtn.innerHTML = '<i class="fas fa-microphone"></i> Talk';
                 if (e.error !== 'no-speech') {
@@ -844,7 +879,7 @@
                 
                 addUserMessage(transcript);
                 let reply = await processMessage(transcript, true);
-                if (!reply) reply = "Sorry, I didn't catch that. Can you repeat? 🎀";
+                if (!reply) reply = "Hmm, I didn't quite catch that. Could you say it again? 🎀";
                 
                 callStatusSpan.innerText = "🔊 Speaking...";
                 speakText(reply, () => {
@@ -888,7 +923,7 @@
         };
         endCallBtn.onclick = endCall;
 
-        // ========== UI BUTTONS ==========
+        // UI dynamic button
         function updateDynamicButton() {
             if (userInp.value.trim().length > 0) {
                 dynBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
@@ -908,7 +943,6 @@
             await processMessage(txt, false);
         }
 
-        // Event Listeners
         userInp.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 80) + 'px';
@@ -922,7 +956,6 @@
             }
         });
 
-        autoBtn.onclick = () => alert("Auto detection: 'image cat', 'news', 'voice hello' work automatically.");
         speakBtn.onclick = startVoiceTyping;
         
         newBtn.onclick = () => {
@@ -935,10 +968,10 @@
             if (window.innerWidth <= 768) sidebar.classList.remove('open');
         };
 
-        // Global functions for action buttons
+        // Global functions
         window.copyMsg = (t) => { navigator.clipboard.writeText(t); alert("Copied!"); };
-        window.likeMsg = () => alert("💖 Thank you!");
-        window.dislikeMsg = () => alert("🌸 Sorry, I'll improve!");
+        window.likeMsg = () => alert("💖 Thank you for your feedback!");
+        window.dislikeMsg = () => alert("🌸 Sorry, I'll do better!");
         window.speakMsg = (t) => speakText(t, null);
         window.shareMsg = (t) => { if(navigator.share) navigator.share({title:'DarkAI', text:t}); else alert("Share: "+t); };
         
@@ -955,7 +988,6 @@
             document.body.appendChild(div);
         };
 
-        // Initialize
         updateDynamicButton();
         load();
     })();
